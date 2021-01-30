@@ -18,18 +18,25 @@ public class PostController {
 
 	@Autowired
 	private PostService service;
-	
-	// Get all posts corresponding to a user
-	@RequestMapping(method=RequestMethod.GET)
-	public ResponseEntity<Object> getAllPosts() {
-		return new ResponseEntity<Object>(service.getAllPosts(), HttpStatus.OK);
-	}
-	
-	// Get one post by postId corresponding to a user
+
+	// Get all posts by userId 
+		@RequestMapping(value="/{userId}/posts", method=RequestMethod.GET)
+		public ResponseEntity<Object> getPosts(@PathVariable Long userId) {
+			return new ResponseEntity<Object>(service.getAllUserPosts(userId), HttpStatus.OK);
+		}
+		
+	// Get one post by postId 
 	@RequestMapping(value="/{postId}", method=RequestMethod.GET)
-	public ResponseEntity<Object> getPosts(@PathVariable Long postId) {
-		return new ResponseEntity<Object>(service.getPost(postId), HttpStatus.OK);
+	public ResponseEntity<Object> getUserPost(@PathVariable Long userId, @PathVariable Long postId) {
+		return new ResponseEntity<Object>(service.getUserPost(userId, postId), HttpStatus.OK);
 	}
+	
+//	// Get one post by postId 
+//	@RequestMapping(value="/{postId}", method=RequestMethod.GET)
+//	public ResponseEntity<Object> getPost(@PathVariable Long postId) {
+//		return new ResponseEntity<Object>(service.getPost(postId), HttpStatus.OK);
+//	}
+//	
 	
 	// Update a post by postId
 	@RequestMapping(value="/{postId}", method=RequestMethod.PUT)
@@ -41,7 +48,7 @@ public class PostController {
 		}
 	}
 	
-	// Create a comment
+	// Create a post
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Object> createPost(@RequestBody Post post, @PathVariable Long userId) {
 		try {
@@ -49,6 +56,14 @@ public class PostController {
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}			
+	}
+
+	
+	// Delete a post
+	@RequestMapping(value="/{postId}", method=RequestMethod.DELETE)
+	public ResponseEntity<Object> deletePost(@PathVariable Long postId) throws Exception {
+		service.deletePost(postId);
+		return new ResponseEntity<Object>("Deleted post with id:" + postId, HttpStatus.OK);
 	}
 
 }

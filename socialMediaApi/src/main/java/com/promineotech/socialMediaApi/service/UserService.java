@@ -13,12 +13,22 @@ public class UserService {
 	@Autowired
 	private UserRepository repo;
 	
-	// register or create user
+	// Register or Create user
 	public User createUser(User user) {
 		return repo.save(user);
 	}
 	
-	// allow users to log in
+	// Delete a user
+	public void deleteUser(Long userId) throws Exception {
+		User foundUser = repo.findOne(userId); 
+		if (foundUser != null) {
+			repo.delete(foundUser);
+		} else {
+			throw new Exception("User not deleted!");
+		}
+	}
+	
+	// Allow user to log in
 	public User login(User user) throws Exception {
 		User foundUser = repo.findByUsername(user.getUsername());
 		if (foundUser != null && foundUser.getPassword().equals(user.getPassword())) {
@@ -27,8 +37,13 @@ public class UserService {
 			throw new Exception("Invalid username or password.");
 		}
 	}
+	// Find all users
+	public Iterable<User> getAllUsers() {
+		return repo.findAll();
+	}
 	
-	// allow users to follow other users
+	
+	// Allow users to follow other users
 	public Following follow(Long userId, Long followId) throws Exception {
 		User user = repo.findOne(userId);
 		User follow = repo.findOne(followId);
@@ -40,7 +55,7 @@ public class UserService {
 		return new Following(user);
 	}
 	
-	// get a list of followed users for a given user
+	// Get a list of followed users for a given user
 	public Following getFollowedUsers(Long userId) throws Exception {
 		User user = repo.findOne(userId);
 		if (user == null) {
@@ -49,7 +64,7 @@ public class UserService {
 		return new Following(user);
 	}
 	
-	// update a user's profile picture
+	// Update a user's profile picture
 	public User updateProfilePicture(Long userId, String url) throws Exception {
 		User user = repo.findOne(userId);
 		if (user == null) {

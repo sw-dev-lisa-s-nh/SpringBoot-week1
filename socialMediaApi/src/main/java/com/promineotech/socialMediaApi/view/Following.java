@@ -19,6 +19,5 @@ public class Following {
 		public void setFollowing(Set<User> following) {
 			this.following = following;
 		}
-		
-		
+				
 }

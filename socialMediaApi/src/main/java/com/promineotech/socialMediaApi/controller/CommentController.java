@@ -19,8 +19,7 @@ public class CommentController {
 	@Autowired
 	private CommentService service;
 	
-	// What about RequestMethod.GET OR RequestMethod.PUT???
-	
+	// Post a comment
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Object> createComment(@RequestBody Comment comment, @PathVariable Long userId, @PathVariable Long postId) {
 		try {
@@ -30,13 +29,11 @@ public class CommentController {
 		}			
 	}
 	
+	// Delete a comment
 	@RequestMapping(value="/{commentId}", method=RequestMethod.DELETE)
 	public ResponseEntity<Object> deleteComment(@PathVariable Long commentId) {
 		service.deleteComment(commentId);
 		return new ResponseEntity<Object>("Deleted comment with id:" + commentId, HttpStatus.OK);
 	}
 
-	
-	
-	
 }
